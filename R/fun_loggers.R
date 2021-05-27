@@ -118,7 +118,7 @@ log_done <- function() {
 #'
 #' @param ... message
 #'
-#' @noRd
+#' @export
 log_message <- function(...) {
 
   if (getOption("summerr.log", default = TRUE)) {
@@ -152,7 +152,8 @@ log_object <- function(object) {
 #' Issuing of warnings
 #'
 #' @param ... message
-#' @noRd
+#'
+#' @export
 log_warn <- function(...) {
 
   rlang::warn(message = str_first_up(paste0(...)))
@@ -165,7 +166,8 @@ log_warn <- function(...) {
 #' @param body A named character that indicates, e.g. which elements caused an
 #' error.
 #' @param ... Anything else passed to \code{\link[rlang:abort]{abort(...)}} as metadata.
-#' @noRd
+#'
+#' @export
 log_error <- function(header, body, ...) {
 
   rlang::abort(message = paste0(
@@ -180,7 +182,9 @@ log_error <- function(header, body, ...) {
 #' Will print the function name it was invoked from.
 #'
 #' @param ... message
-#' @noRd
+#' @param object An (optional) object that should be printed to the console.
+#'
+#' @export
 log_debugging <- function(..., object = NULL) {
 
   if (getOption("summerr.debug", default = FALSE)) {
@@ -217,7 +221,7 @@ log_debugging <- function(..., object = NULL) {
 #' @param filename A generic filename of the template, e.g., "fun_template".
 #' @param version  A version idtenfier, e.g., "A01".
 #'
-#' @noRd
+#' @export
 get_template <- function(package = NULL, filename = "template", version = "") {
 
   tmp.name <- paste0(filename, "-", version, ".R")

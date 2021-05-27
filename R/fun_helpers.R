@@ -1,7 +1,5 @@
 #  HELPERS ---------------------------------------------------------------------
 
-utils::globalVariables(".")
-
 #' Interpret characters as well names
 #'
 #' @param well Character vector.
@@ -100,6 +98,7 @@ normalizePath <- function(path) {
 #' @return
 #' \code{TRUE} if succesful, \code{FALSE} otherwise.
 #'
+#' @export
 backup_file <- function(path, sep = "_", stamp = "%y%m%d") {
 
   if (file.exists(path)) {
