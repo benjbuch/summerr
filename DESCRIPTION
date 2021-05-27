@@ -16,3 +16,18 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports:
+    rstudioapi,
+    rlang,
+    purrr,
+    stringr,
+    dplyr,
+    tidyr,
+    tidyselect,
+    tibble,
+    ggplot2,
+    forcats,
+    magrittr,
+    broom,
+    openxlsx
+    
