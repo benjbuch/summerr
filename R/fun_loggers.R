@@ -14,13 +14,17 @@
 
   if (getOption("summerr.log", default = FALSE)) {
 
-    packageStartupMessage("... Logging to the console for 'summerr' is enabled. ",
-                          "You can disable it with `options(summerr.log = FALSE)`.")
+    packageStartupMessage("\nVerbose logging: `options(summerr.log = TRUE)`")
 
   } else {
 
-    packageStartupMessage("... Llogging to the console for 'summerr' is disabled. ",
-                          "You can enable it with `options(summerr.log = TRUE)`.")
+    packageStartupMessage("\nVerbose logging: `options(summerr.log = FALSE)`")
+
+  }
+
+  if (getOption("summerr.debug", default = FALSE)) {
+
+    packageStartupMessage("                 `options(summerr.debug = TRUE)`")
 
   }
 
