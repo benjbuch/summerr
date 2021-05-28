@@ -619,7 +619,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # no common directories.
 
     datad$value <- sapply(datad$value, sub, pattern = relative_to,
-                          replacement = "", fixed = TRUE)
+                          replacement = ".", fixed = TRUE)
 
   }
 
@@ -631,7 +631,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
   datad <- datad %>%
     dplyr::mutate(pivot = stringr::str_extract(.data$value, pivot)) %>%
     tidyr::separate(.data$value, into = c("V1", "V2"), sep = pivot, fill = "left") %>%
-    dplyr::mutate(V1 = summerr::normalizePath(.data$V1))
+    dplyr::mutate(V1 = stringr::str_remove(.data$V1, pattern = paste0(.Platform$file.sep, "$")))
 
   datad <- datad %>%
     # Remove trailing path separator as we do not count "empty" directories; the
@@ -649,7 +649,8 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
                     remove = FALSE) %>%
     # unnest the replicates: (pivot) sub_1 X X sub_2 ... sub_N (= file)
     tidyr::separate(.data$V2, into = c(NA, paste0(sub_prefix, "1"), "V3"),
-                    sep = .Platform$file.sep, fill = "left", extra = "merge") %>%
+                    sep = .Platform$file.sep, fill = "left", extra = "merge",
+                    remove = FALSE) %>%
     tidyr::separate(.data$V3, into = paste0(sub_prefix, seq(2, max(c(2, .$subs_level),
                                                                    na.rm = TRUE))),
                     sep = .Platform$file.sep, fill = "left", extra = "drop") %>%
@@ -663,15 +664,12 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # order corresponding to the original argument; if the paths argument was
     # a nested list, we only continue with the topmost entry
     dplyr::mutate(path_to_files = sapply(paths, "[[", 1)) %>%
-    dplyr::mutate(path_to_group = ifelse(nchar(.data$group) > 0, stringr::str_extract(
-      first_paths, paste0("^.*?", .data$group)),
-      # as a result of clean_up_path, a leading file.sep was stripped off
-      paste0(.Platform$file.sep, relative_to))) %>%
+    dplyr::mutate(path_to_group = summerr::normalizePath(stringr::str_remove(
+      path_to_files, stringr::str_c(pivot, .data$V2)))) %>%
     # preserve the file order index
     dplyr::mutate(findex = dplyr::row_number())
 
   log_debugging(object = datad)
-
 
   datad <- datad %>%
     # grp_N is root ("C:" under Windows, "" under UNIX) when all paths are
