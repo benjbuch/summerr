@@ -81,7 +81,7 @@ grouping variable. The full (unique) grouping is returned under \code{group}.
 Grouping can allow to anaylze multiple directories simultaneously with their
 own set of parameters enclosed at an appropriate level of nesting.
 
-} \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \%
+}
 
 \subsection{Replicates by nesting subfolders}{
 
@@ -96,7 +96,7 @@ in
 
 the first pivot ("0_A1") contains two replicates, the second pivot ("0_A2") one.
 
-} \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \%
+}
 }
 \examples{
 demo_paths <- c("folderA/0_A1/1/file.x", "folderA/0_A1/2/file.x",

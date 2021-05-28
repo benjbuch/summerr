@@ -58,12 +58,13 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
 #' @param path A character vector of file paths.
 #'
 #' @details
-#' Calls \code{\link[base:normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
+#' Calls \code{\link[base::normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
 #' In addition, trailing slashes are removed.
 #'
 #' @return
 #' A character vector.
-#'
+#' 
+#' @export
 normalizePath <- function(path) {
 
   log_debugging("received", sQuote(path))
@@ -103,7 +104,7 @@ backup_file <- function(path, sep = "_", stamp = "%y%m%d") {
 
   if (file.exists(path)) {
 
-    bkp_file <- normalizePath(paste0(path, sep, format(file.mtime(path), stamp)))
+    bkp_file <- summerr::normalizePath(paste0(path, sep, format(file.mtime(path), stamp)))
 
     if (file.exists(bkp_file)) file.remove(bkp_file)
 
@@ -192,7 +193,7 @@ select_directory <- function(path = getwd(), caption = "Select a directory",
 
   }
 
-  path <- normalizePath(path)
+  path <- summerr::normalizePath(path)
 
   path
 
@@ -281,7 +282,7 @@ select_single_file <- function(path = getwd(), prefix = ".+", suffix = "*",
 
   if (length(dir_files) != 1) message("Warning: No files matching '", pattern, "'.")
 
-  dir_files <- normalizePath(dir_files)
+  dir_files <- summerr::normalizePath(dir_files)
 
   dir_files
 
@@ -505,7 +506,7 @@ import_layout_from_excel <- function(
 #' Grouping can allow to anaylze multiple directories simultaneously with their
 #' own set of parameters enclosed at an appropriate level of nesting.
 #'
-#' } % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+#' }
 #'
 #' \subsection{Replicates by nesting subfolders}{
 #'
@@ -520,7 +521,7 @@ import_layout_from_excel <- function(
 #'
 #' the first pivot ("0_A1") contains two replicates, the second pivot ("0_A2") one.
 #'
-#' } % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+#' }
 #'
 #' @return
 #' A tibble with the experiment layout as determined from the \code{paths}
@@ -553,29 +554,15 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   grp_prefix <- "grp_"
   sub_prefix <- "sub_"
-
+  
   usr.relative_to <- relative_to  # store user argument
-
-  cleanup_path <- function(path) {
-
-    # Globally, we do not alter the file paths provided, but internally we
-    # must create some common ground since occasionally, we may receive mixed
-    # path arguments.
-    #
-    # - paths are "normalized"
-    # - paths do not start with "/" (which they may of course usually do)
-
-    stringr::str_remove(string = normalizePath(path),
-                        pattern = paste0("^", .Platform$file.sep))
-
-  }
 
   # only keep the first element if this was a nested list to # transform paths
   # into a plain character vector
 
   first_paths <- sapply(paths, "[[", 1)
 
-  datad <- tibble::as_tibble(cleanup_path(first_paths))
+  datad <- tibble::as_tibble(summerr::normalizePath(first_paths))
 
   # To avoid spurious matching of the regex to a common base directory, remove
   # the common path first.
@@ -622,12 +609,10 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     }
 
   }
+  
+  relative_to <- summerr::normalizePath(relative_to)
 
   if (relative_to != "") {
-
-    # browser()
-
-    relative_to <- cleanup_path(relative_to)
 
     # The "." will designate the common path designated by the user as input
     # or identified as topmost shared directory. If there is no ".", there are
@@ -645,15 +630,14 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   datad <- datad %>%
     dplyr::mutate(pivot = stringr::str_extract(.data$value, pivot)) %>%
-    tidyr::separate(.data$value, into = c("V1", "V2"), sep = pivot, fill = "left")
-
-  # browser()
+    tidyr::separate(.data$value, into = c("V1", "V2"), sep = pivot, fill = "left") %>% 
+    dplyr::mutate(V1 = summerr::normalizePath(.data$V1))
 
   datad <- datad %>%
     # Remove trailing path separator as we do not count "empty" directories; the
     # grp parts then look like "dir1/dir2/dir3" of which the leftmost may be
-    # shared across all observations.
-    dplyr::mutate(V1 = cleanup_path(.data$V1)) %>%
+    # shared across all observations. This should have been done in all cases.
+    # dplyr::mutate(V1 = cleanup_path(.data$V1)) %>%
     dplyr::mutate(
       grps_level = stringr::str_count(.data$V1, pattern = .Platform$file.sep),
       subs_level = stringr::str_count(.data$V2, pattern = .Platform$file.sep)
@@ -688,19 +672,12 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   log_debugging(object = datad)
 
-  # If grp_N is not the only group after limiting to unique group folders
-  # unique folder names (except for the lowest one), then drop it also
-
-  if (is.null(usr.relative_to) &&
-      (grp_rm <- max(datad$grps_level, na.rm = TRUE)) > 0 &&
-      length(unique(datad[[paste0(grp_prefix, grp_rm)]])) == 1) {
-
-    datad[[paste0(grp_prefix, grp_rm)]] <- NA
-
-  }
 
   datad <- datad %>%
-    # remove empty groups
+    # grp_N is root ("C:" under Windows, "" under UNIX) when all paths are
+    # normalized, we drop it
+    dplyr::select(!paste0(grp_prefix, max(.$grps_level, na.rm = TRUE))) %>% 
+    # remove additionally empty groups
     dplyr::mutate(dplyr::across(tidyselect::starts_with(grp_prefix), ~ dplyr::na_if(., ""))) %>%
     dplyr::select(!tidyselect::vars_select_helpers$where(~ all(is.na(.)))) %>%
     # preserve the group index
