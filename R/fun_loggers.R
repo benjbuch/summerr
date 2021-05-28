@@ -238,9 +238,15 @@ get_template <- function(package = NULL, filename = "template", version = "") {
 
   tmp.cont <- c(tmp.cont, paste("#", utils::capture.output(utils::sessionInfo())))
 
-  if (rstudioapi::isAvailable()) {
+  if (rstudioapi::isAvailable(version_needed = "1.411")) {
 
-    rstudioapi::documentNew(tmp.cont, type = "r")
+    rstudioapi::documentNew(text = tmp.cont, type = "r")
+
+  } else {
+
+    tmp.file <- tempfile(pattern = paste0(filename, "-", version, "-"), fileext = ".R")
+    writeLines(tmp.cont, con = tmp.file)
+    utils::file.edit(tmp.file)
 
   }
 
