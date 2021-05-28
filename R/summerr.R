@@ -20,7 +20,7 @@ utils::globalVariables(".")
 #'
 #' \link{backup_file}
 #'
-#' } % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+#' }
 #'
 #' \subsection{Importing Experiment Layouts}{
 #'
@@ -30,13 +30,13 @@ utils::globalVariables(".")
 #'
 #' \link{display_plate_layout}
 #'
-#' } % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+#' }
 #'
 #' \subsection{Formatting Helpers}{
 #'
 #' \link{as_well}
 #'
-#' } % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+#' }
 #'
 #' @docType package
 #' @name summerr-package
