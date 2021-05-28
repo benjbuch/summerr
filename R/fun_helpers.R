@@ -554,7 +554,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   grp_prefix <- "grp_"
   sub_prefix <- "sub_"
-
+  
   usr.relative_to <- relative_to  # store user argument
 
   cleanup_path <- function(path) {
@@ -564,10 +564,11 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # path arguments.
     #
     # - paths are "normalized"
-    # - paths do not start with "/" (which they may of course usually do)
+    # - paths do not start with "/" (which they may of course usually do for UNIX)
+    # - paths do not start with "C:/" or "X:/" etc. (which they might for WINDOWS)
 
     stringr::str_remove(string = summerr::normalizePath(path),
-                        pattern = paste0("^", .Platform$file.sep))
+                        pattern = paste0("^[A-Z]?:?", .Platform$file.sep))
 
   }
 
