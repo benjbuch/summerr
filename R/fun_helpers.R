@@ -58,12 +58,12 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
 #' @param path A character vector of file paths.
 #'
 #' @details
-#' Calls \code{\link[base::normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
+#' Calls \code{\link[base:normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
 #' In addition, trailing slashes are removed.
 #'
 #' @return
 #' A character vector.
-#' 
+#'
 #' @export
 normalizePath <- function(path) {
 
@@ -554,7 +554,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   grp_prefix <- "grp_"
   sub_prefix <- "sub_"
-  
+
   usr.relative_to <- relative_to  # store user argument
 
   # only keep the first element if this was a nested list to # transform paths
@@ -609,7 +609,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     }
 
   }
-  
+
   relative_to <- summerr::normalizePath(relative_to)
 
   if (relative_to != "") {
@@ -630,7 +630,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
 
   datad <- datad %>%
     dplyr::mutate(pivot = stringr::str_extract(.data$value, pivot)) %>%
-    tidyr::separate(.data$value, into = c("V1", "V2"), sep = pivot, fill = "left") %>% 
+    tidyr::separate(.data$value, into = c("V1", "V2"), sep = pivot, fill = "left") %>%
     dplyr::mutate(V1 = summerr::normalizePath(.data$V1))
 
   datad <- datad %>%
@@ -676,7 +676,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
   datad <- datad %>%
     # grp_N is root ("C:" under Windows, "" under UNIX) when all paths are
     # normalized, we drop it
-    dplyr::select(!paste0(grp_prefix, max(.$grps_level, na.rm = TRUE))) %>% 
+    dplyr::select(!paste0(grp_prefix, max(.$grps_level, na.rm = TRUE))) %>%
     # remove additionally empty groups
     dplyr::mutate(dplyr::across(tidyselect::starts_with(grp_prefix), ~ dplyr::na_if(., ""))) %>%
     dplyr::select(!tidyselect::vars_select_helpers$where(~ all(is.na(.)))) %>%

@@ -18,6 +18,6 @@ may expand to "\code{/}", whereas some upstream applications may still use
 "\code{\\}" to separate folders and files.
 }
 \details{
-Calls \code{\link[base::normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
+Calls \code{\link[base:normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
 In addition, trailing slashes are removed.
 }
