@@ -21,7 +21,7 @@ summerr-package
 
 \link{backup_file}
 
-} \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \%
+}
 
 \subsection{Importing Experiment Layouts}{
 
@@ -31,13 +31,13 @@ summerr-package
 
 \link{display_plate_layout}
 
-} \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \%
+}
 
 \subsection{Formatting Helpers}{
 
 \link{as_well}
 
-} \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \% \%
+}
 }
 
 \author{
