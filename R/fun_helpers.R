@@ -58,12 +58,13 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
 #' @param path A character vector of file paths.
 #'
 #' @details
-#' Calls \code{\link[base:normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
+#' Calls \code{\link[base::normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
 #' In addition, trailing slashes are removed.
 #'
 #' @return
 #' A character vector.
-#'
+#' 
+#' @export
 normalizePath <- function(path) {
 
   log_debugging("received", sQuote(path))
@@ -103,7 +104,7 @@ backup_file <- function(path, sep = "_", stamp = "%y%m%d") {
 
   if (file.exists(path)) {
 
-    bkp_file <- normalizePath(paste0(path, sep, format(file.mtime(path), stamp)))
+    bkp_file <- summerr::normalizePath(paste0(path, sep, format(file.mtime(path), stamp)))
 
     if (file.exists(bkp_file)) file.remove(bkp_file)
 
@@ -192,7 +193,7 @@ select_directory <- function(path = getwd(), caption = "Select a directory",
 
   }
 
-  path <- normalizePath(path)
+  path <- summerr::normalizePath(path)
 
   path
 
@@ -281,7 +282,7 @@ select_single_file <- function(path = getwd(), prefix = ".+", suffix = "*",
 
   if (length(dir_files) != 1) message("Warning: No files matching '", pattern, "'.")
 
-  dir_files <- normalizePath(dir_files)
+  dir_files <- summerr::normalizePath(dir_files)
 
   dir_files
 
@@ -565,7 +566,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # - paths are "normalized"
     # - paths do not start with "/" (which they may of course usually do)
 
-    stringr::str_remove(string = normalizePath(path),
+    stringr::str_remove(string = summerr::normalizePath(path),
                         pattern = paste0("^", .Platform$file.sep))
 
   }
