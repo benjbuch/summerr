@@ -665,7 +665,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # a nested list, we only continue with the topmost entry
     dplyr::mutate(path_to_files = sapply(paths, "[[", 1)) %>%
     dplyr::mutate(path_to_group = summerr::normalizePath(stringr::str_remove(
-      path_to_files, stringr::str_c(pivot, .data$V2)))) %>%
+      .data$path_to_files, stringr::str_c(pivot, .data$V2)))) %>%
     # preserve the file order index
     dplyr::mutate(findex = dplyr::row_number())
 
@@ -690,10 +690,10 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
     # add replicate information
     dplyr::mutate(
       replicate = dplyr::case_when(
-        lengths(path_to_files) > 1 ~ NA_character_,
+        lengths(.data$path_to_files) > 1 ~ NA_character_,
         TRUE ~ .data[[paste0(sub_prefix, 1)]]),
       n_replicates = dplyr::case_when(
-        lengths(path_to_files) > 1 ~ lengths(path_to_files),
+        lengths(.data$path_to_files) > 1 ~ lengths(path_to_files),
         TRUE ~ dplyr::n_distinct(.data$replicate)))
 
   if (all(lengths(paths) == 1)) datad <- dplyr::group_by(datad, .data$replicate,
@@ -711,6 +711,8 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
   datad
 
 }
+
+# PLOTTING ---------------------------------------------------------------------
 
 #' Display a layout with ggplot2
 #'
@@ -879,6 +881,8 @@ get_border_indices <- function(items = NULL, border = "b", byrow = TRUE, include
   unlist(all.pages)
 
 }
+
+# MODELLING --------------------------------------------------------------------
 
 #' Fit, tidy and augment a model
 #'
