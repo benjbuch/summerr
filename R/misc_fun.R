@@ -700,7 +700,7 @@ import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
                                                          .add = TRUE)
 
   datad <- datad %>%
-    dplyr::select(!tidyselect::any_of(c("grps_level", "subs_level"))) %>%
+    dplyr::select(!tidyselect::any_of(c("grps_level", "subs_level", "V2"))) %>%
     dplyr::select(dplyr::group_vars(datad),
                   tidyselect::any_of(c("n_replicates", "findex", "gindex",
                                        "path_to_files", "path_to_group")),
