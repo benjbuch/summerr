@@ -1,8 +1,17 @@
 #' Modified cytosine nucleobases
 #'
 #' @export
-MODIFIED_C_BASES <- factor(c("C", "mC", "hmC", "fC", "caC"),
-                           levels = c("C", "mC", "hmC", "fC", "caC"))
+MOD_C_BASES <- factor(c("C", "mC", "hmC", "fC", "caC"),
+                      levels = c("C", "mC", "hmC", "fC", "caC"))
+
+#' Default color scheme for modified cytosine nucleobases
+#'
+#' Based on Brewer's "Paired" palette,
+#' \code{RColorBrewer::brewer.pal(12, "Paired")}.
+#'
+#' @export
+COL_C_BASES <- c(C  = "#000000", mC = "#E31A1C", hmC = "#1F78B4", fC = "#33A02C",
+                 caC = "#FF7F00")
 
 #' CpG combinations
 #'
