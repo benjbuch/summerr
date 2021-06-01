@@ -99,9 +99,18 @@ get_template <- function(package = NULL, filename = "template", version = "") {
   tmp.cont <- sub("<<RVERSION>>", R.version.string,
                   tmp.cont, fixed = TRUE)
 
-  # add sessionInfo()
+  tmp.spcr <- "# ##############################################################################"
 
-  tmp.cont <- c(tmp.cont, paste("#", utils::capture.output(utils::sessionInfo())))
+  tmp.cont <- c(
+    # add update reminder
+    paste0("# devtools::install_github(benjbuch/", package, ")  ## Did you check for updates?"),
+    tmp.spcr,
+    #
+    tmp.cont,
+    "",
+    tmp.spcr,
+    # add sessionInfo()
+    paste("#", utils::capture.output(utils::sessionInfo())))
 
   if (rstudioapi::isAvailable(version_needed = "1.4")) {
 
