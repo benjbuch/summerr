@@ -1,0 +1,91 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# summerr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of `summerr` is to centralize the frequently used and some of the more 
+exotic R functions and routines encountered during import, export, and processing 
+of primary research data in the lab.
+
+Many of these functions are re-used (imported) by more dedicated packages of the 
+`summerr` family.
+
+## Installation
+
+Since this package is not part of [CRAN](https://CRAN.R-project.org), you must 
+install and update the development version from [GitHub](https://github.com/) 
+with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("benjbuch/summerr")
+```
+## Showcases
+
+Some examples of general utility.
+
+```{r example, message=FALSE, warning=FALSE}
+library(summerr)
+```
+
+### Importing Data
+
+Interactive access to files and folders through RStudio API (if available; else
+console-based chooser).
+
+```{r import1, eval=FALSE, include=TRUE}
+# select, e.g., an Excel file, ...
+my_file <- select_single_file(suffix = "xlsx")
+
+# ... or choose an entire directory to take forward
+my_dir <- select_directory()
+```
+
+For example, a facility to import a 384-well plate layout created in Excel with 
+metadata columns/rows:
+
+```{r import2, eval=TRUE, include=FALSE}
+my_file <- system.file("extdata", "platelayout_maldi.xlsx", package = "summerrmass")
+```
+
+![plate_layout_example](man/figures/maldi_platelayout.png)
+
+```{r platelayout}
+my_layout <- import_layout_from_excel(file = my_file, meta_row = c(concentration = "1"))
+
+my_layout
+
+display_plate_layout(my_layout, fill = content, alpha = as.numeric(concentration)) + 
+  ggplot2::labs(alpha = "Compound Concentration", fill = NULL)
+```
+
+### Fitting Models
+
+Calling `broom::tidy`, `broom::glance` and `broom::augment` on model fitted to 
+each group of a grouped data frame and returning, fail-safe, these aspects:
+
+```{r fitting}
+library(magrittr)
+
+iris %>% 
+  dplyr::group_by(Species) %>% 
+  model_cleanly_groupwise(lm, Sepal.Length ~ Sepal.Width)
+```
+
+
+
