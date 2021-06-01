@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# summerr <img src='man/figures/logo.png' align="right" height="140" /></a>
+# summerr <a><img src='man/figures/logo.png' align="right" height="140"/></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
