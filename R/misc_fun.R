@@ -753,6 +753,134 @@ display_plate_layout <- function(layout, ...) {
 
 }
 
+#' Display a fitted curve
+#'
+#' Draw a plot after fitting a two-dimensional model.
+#'
+#' @inheritParams ggplot2::aes
+#' @param df A grouped data frame, created with \code{\link{model_cleanly_groupwise}}
+#' @param digits Integer indicating the number of significant digits
+#' to be used when fitted parameters are substituted in the model formula.
+#' Negative values are allowed; see \link[base:Round]{signif(...)}.
+#'
+#' @return
+#' A \code{\link[ggplot2:ggplot]{ggplot}} that can be further customized.
+#'
+#' @details
+#' The parameters of the model, usually accessible via the \code{.$tidy}
+#' column after \code{model_cleanly_groupwise} has been called, are substituted
+#' in the fitted formula and can be accessed as \code{.$sub.formula}.
+#'
+#' @examples
+#' library(dplyr)
+#' library(ggplot2)
+#'
+#' # create some noisy data for fitting a linear model
+#' x <- seq(1, 10)
+#' y1 <- 3 * x + 5 + rnorm(10)
+#' y2 <- 1 * x + 1 + rnorm(10)
+#'
+#' my_data <- bind_rows(data1 = tibble(x, y = y1),
+#'                      data2 = tibble(x, y = y2), .id = "dataset") %>%
+#'            group_by(dataset)
+#'
+#' my_data %>%
+#'   model_cleanly_groupwise(lm, formula = y ~ x) %>%
+#'   display_model(color = dataset)
+#'
+#' ## positioning of per-facet text labels in ggplot is inherently
+#' ## difficult; the visual of the example could be improved
+#'
+#' my_data %>%
+#'   model_cleanly_groupwise(lm, formula = y ~ x) %>%
+#'   display_model() +
+#'   # add substituted formula
+#'   geom_text(aes(x = -Inf, y = Inf, label = sub.formula),
+#'     hjust = 0, vjust = 1) +
+#'   # add R square
+#'   geom_text(data = . %>% tidyr::unnest(glance),
+#'     aes(x = Inf, y = Inf, label = paste("R^2 =", signif(r.squared, 3))),
+#'     hjust = 1, vjust = 1) +
+#'   # show as facet
+#'   facet_wrap(vars(dataset))
+#'
+#'
+#' @importFrom  rlang .data
+#'
+#' @export
+display_model <- function(df, ..., digits = 2) {
+
+  # substitute the fitted values
+
+  substitute_and_simplify <- function(x, digits = 2) {
+
+    FML <- formula(x)
+    COF <- coef(x)
+
+    # substitute formula with coefficients
+
+    if (class(x) == "lm") {
+
+      # only "unnamed" coefficients given
+
+      SFL <- as.formula(paste0(formula.tools::lhs(FML), "~",
+                               paste0(sprintf("%f*%s", signif(COF[-1], digits = digits),
+                                              names(COF[-1])), collapse = "+"),
+                               "+", signif(COF[1], digits = digits)))
+
+    } else {
+
+      # coefficients are values of parameters
+
+      SFL <- do.call("substitute", list(FML, as.list(signif(COF, digits = digits))))
+
+    }
+
+    LHS <- formula.tools::lhs(SFL)
+    RHS <- Deriv::Simplify(formula.tools::rhs(SFL))
+
+    NFL <- substitute(y ~ x, list(y = LHS, x = RHS))
+
+    LHS.VARS <- formula.tools::lhs.vars(NFL)
+    RHS.VARS <- setdiff(formula.tools::get.vars(NFL), LHS.VARS)
+
+    tibble::tibble(sub.formula = list(NFL), lhs = list(LHS), rhs = list(RHS),
+                   lhs.vars = list(LHS.VARS), rhs.vars = list(RHS.VARS))
+
+  }
+
+  df$.tmp <- lapply(df$model, substitute_and_simplify, digits = digits)
+  df <- dplyr::mutate(tidyr::unnest(df, ".tmp"), sub.formula = as.character(
+    .data$sub.formula))
+
+  if (getOption("summerr.log", default = FALSE) == TRUE) print(df)
+
+  # make sure to get a 2D plot
+
+  stopifnot(all(length(X_VAR <- unique(unlist(df$rhs.vars))) == 1,
+                length(Y_VAR <- unique(unlist(df$lhs.vars))) == 1))
+
+  X_VAR <- rlang::ensym(X_VAR)
+
+  ggplot2::ggplot(data = df, mapping = ggplot2::aes(x = !!X_VAR, ...)) +
+    # original data points
+    ggplot2::geom_pointrange(
+      data = . %>%
+        dplyr::select(dplyr::group_vars(.), .data$augment_old) %>%
+        tidyr::unnest(.data$augment_old),
+      ggplot2::aes(y = .fitted + .resid),
+      stat = "summary", fun.data = ggplot2::mean_se, fatten = 1) +
+    # fitted lines
+    ggplot2::geom_path(
+      data = . %>%
+        dplyr::select(group_vars(.), .data$augment_new) %>%
+        tidyr::unnest(.data$augment_new),
+      ggplot2::aes(y = .fitted)) +
+    # labels
+    ggplot2::labs(y = Y_VAR)
+
+}
+
 #' Arrange plots on a page
 #'
 #' This helper can be used to arrange plots with \code{\link[graphics:layout]{layout}}
