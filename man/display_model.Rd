@@ -46,18 +46,21 @@ my_data <- bind_rows(data1 = tibble(x, y = y1),
            group_by(dataset)
 
 my_data \%>\%
-  model_cleanly_groupwise(lm, formula = x ~ y) \%>\%
+  model_cleanly_groupwise(lm, formula = y ~ x) \%>\%
   display_model(color = dataset)
 
+## positioning of per-facet text labels in ggplot is inherently
+## difficult; the visual of the example could be improved
+
 my_data \%>\%
-  model_cleanly_groupwise(lm, formula = x ~ y) \%>\%
+  model_cleanly_groupwise(lm, formula = y ~ x) \%>\%
   display_model() +
   # add substituted formula
   geom_text(aes(x = -Inf, y = Inf, label = sub.formula),
     hjust = 0, vjust = 1) +
   # add R square
   geom_text(data = . \%>\% tidyr::unnest(glance),
-    aes(x = Inf, y = Inf, label = r.squared),
+    aes(x = Inf, y = Inf, label = paste("R^2 =", signif(r.squared, 3))),
     hjust = 1, vjust = 1) +
   # show as facet
   facet_wrap(vars(dataset))
