@@ -29,5 +29,7 @@ Imports:
     forcats,
     magrittr,
     broom,
-    openxlsx
+    openxlsx,
+    formula.tools,
+    Deriv
     

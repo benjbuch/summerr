@@ -814,8 +814,8 @@ display_model <- function(df, ..., digits = 2) {
 
   substitute_and_simplify <- function(x, digits = 2) {
 
-    FML <- formula(x)
-    COF <- coef(x)
+    FML <- stats::formula(x)
+    COF <- stats::coef(x)
 
     # substitute formula with coefficients
 
@@ -823,10 +823,10 @@ display_model <- function(df, ..., digits = 2) {
 
       # only "unnamed" coefficients given
 
-      SFL <- as.formula(paste0(formula.tools::lhs(FML), "~",
-                               paste0(sprintf("%f*%s", signif(COF[-1], digits = digits),
-                                              names(COF[-1])), collapse = "+"),
-                               "+", signif(COF[1], digits = digits)))
+      SFL <- stats::as.formula(paste0(formula.tools::lhs(FML), "~",
+                                      paste0(sprintf("%f*%s", signif(COF[-1], digits = digits),
+                                                     names(COF[-1])), collapse = "+"),
+                                      "+", signif(COF[1], digits = digits)))
 
     } else {
 
@@ -868,14 +868,14 @@ display_model <- function(df, ..., digits = 2) {
       data = . %>%
         dplyr::select(dplyr::group_vars(.), .data$augment_old) %>%
         tidyr::unnest(.data$augment_old),
-      ggplot2::aes(y = .fitted + .resid),
+      ggplot2::aes(y = .data$.fitted + .data$.resid),
       stat = "summary", fun.data = ggplot2::mean_se, fatten = 1) +
     # fitted lines
     ggplot2::geom_path(
       data = . %>%
-        dplyr::select(group_vars(.), .data$augment_new) %>%
+        dplyr::select(dplyr::group_vars(.), .data$augment_new) %>%
         tidyr::unnest(.data$augment_new),
-      ggplot2::aes(y = .fitted)) +
+      ggplot2::aes(y = .data$.fitted)) +
     # labels
     ggplot2::labs(y = Y_VAR)
 
