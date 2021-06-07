@@ -559,6 +559,22 @@ import_layout_from_excel <- function(
 #' @export
 import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
                                      relative_to = getwd()) {
+  
+  if (is.null(paths) || length(paths) == 0) {
+    
+    datad <- tibble::tibble(grp_0 = character(0), 
+                            pivot = character(0),
+                            replicate = NA_integer_, n_replicates = NA_integer_,
+                            findex = NA_integer_, 
+                            gindex = NA_integer_,
+                            path_to_files = character(0), 
+                            path_to_group = character(0), 
+                            group = character(0),
+                            file  = character(0))
+    
+    return(datad)
+    
+  }
 
   grp_prefix <- "grp_"
   sub_prefix <- "sub_"
