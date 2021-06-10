@@ -130,7 +130,7 @@ log_object <- function(object) {
 #' @export
 log_warn <- function(...) {
 
-  rlang::warn(message = str_first_up(paste0(...)))
+  rlang::warn(message = str_first_up(paste(...)))
 
 }
 
