@@ -1063,7 +1063,15 @@ get_border_indices <- function(items = NULL, border = "b", byrow = TRUE, include
 #' @export
 model_cleanly_groupwise <- function(x, FUN, newdata = NULL, ...) {
 
-  # suppress error and warning messages
+  # warn if not all dots arguments are named
+
+  .call <- match.call(expand.dots = FALSE)
+
+  if(any(nchar(names(.call$...)) == 0)) log_warn("not all arguments passed to",
+                                                 sQuote(.call$FUN), "are named")
+
+  # suppress error and warning messages from now on
+
   old_ep <- getOption("show.error.messages")
   on.exit(options(show.error.messages = old_ep))
 
