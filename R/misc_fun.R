@@ -19,31 +19,31 @@
 #' @export
 as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) {
 
-  if (is.null(well) || is.na(well) || length(well) == 0 || nchar(well) == 0) {
+  # pre-processing to handle NULL values in a list
 
-    res <- list(well_let = NA_character_, well_num = NA_character_, well = NA_character_)
+  well <- sapply(well, function(x) if(is.null(x)) NA_character_ else x)
 
-  } else {
+  # extract parts
 
-    well_raw <- stringr::str_extract(well, "[:alnum:]+")
+  res <- list(well_let = NA_character_, well_num = NA_character_, well = NA_character_)
 
-    well_num <- stringr::str_extract(well_raw, "[0-9]+")
-    well_let <- stringr::str_extract(well_raw, stringr::regex("[A-Z]+", ignore_case = TRUE))
+  well_raw <- stringr::str_extract(well, "[:alnum:]+")
 
-    defects <- mapply(function(x, y) any(is.na(x), is.na(y)), well_let, well_num)
+  well_num <- stringr::str_extract(well_raw, "[0-9]+")
+  well_let <- stringr::str_extract(well_raw, stringr::regex("[A-Z]+", ignore_case = TRUE))
 
-    if (to.upper == TRUE) well_let <- toupper(well_let)
+  defects <- mapply(function(x, y) any(is.na(x), is.na(y)), well_let, well_num)
 
-    well_num <- sprintf(paste0("%0", zero.padding, "d"), as.numeric(well_num))
-    well_tot <- paste0(well_let, well_num)
+  if (to.upper == TRUE) well_let <- toupper(well_let)
 
-    well_let[defects] <- NA_character_
-    well_num[defects] <- NA_character_
-    well_tot[defects] <- NA_character_
+  well_num <- sprintf(paste0("%0", zero.padding, "d"), as.numeric(well_num))
+  well_tot <- paste0(well_let, well_num)
 
-    res <- list(well_let = well_let, well_num = well_num, well = well_tot)
+  well_let[defects] <- NA_character_
+  well_num[defects] <- NA_character_
+  well_tot[defects] <- NA_character_
 
-  }
+  res <- list(well_let = well_let, well_num = well_num, well = well_tot)
 
   if (as.tibble == TRUE) {
 
