@@ -6,12 +6,6 @@
 \title{summerr}
 \description{
 General helpers for lab fun.
-}
-\details{
-summerr-package
-}
-\section{General Functions}{
-
 
 \subsection{File and Directory Operations}{
 
@@ -56,7 +50,9 @@ and
 
 }
 }
-
+\details{
+summerr-package
+}
 \author{
 Benjamin Buchmuller \email{benjamin.buchmuller@tu-dortmund.de}
 }

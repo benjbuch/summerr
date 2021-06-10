@@ -10,8 +10,6 @@ utils::globalVariables(".")
 #'
 #' General helpers for lab fun.
 #'
-#' @section General Functions:
-#'
 #' \subsection{File and Directory Operations}{
 #'
 #' \link{select_directory}
