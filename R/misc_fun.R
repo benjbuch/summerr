@@ -18,31 +18,31 @@
 #'
 #' @export
 as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) {
-  
+
   if (is.null(well) || is.na(well) || length(well) == 0 || nchar(well) == 0) {
-    
+
     res <- list(well_let = NA_character_, well_num = NA_character_, well = NA_character_)
-    
+
   } else {
-    
+
     well_raw <- stringr::str_extract(well, "[:alnum:]+")
-    
+
     well_num <- stringr::str_extract(well_raw, "[0-9]+")
     well_let <- stringr::str_extract(well_raw, stringr::regex("[A-Z]+", ignore_case = TRUE))
-    
+
     defects <- mapply(function(x, y) any(is.na(x), is.na(y)), well_let, well_num)
-    
+
     if (to.upper == TRUE) well_let <- toupper(well_let)
-    
+
     well_num <- sprintf(paste0("%0", zero.padding, "d"), as.numeric(well_num))
     well_tot <- paste0(well_let, well_num)
-    
+
     well_let[defects] <- NA_character_
     well_num[defects] <- NA_character_
     well_tot[defects] <- NA_character_
-    
+
     res <- list(well_let = well_let, well_num = well_num, well = well_tot)
-    
+
   }
 
   if (as.tibble == TRUE) {
@@ -50,7 +50,7 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
     res <- dplyr::as_tibble(res)
 
   }
-  
+
   res
 
 }
@@ -559,21 +559,21 @@ import_layout_from_excel <- function(
 #' @export
 import_layout_from_paths <- function(paths, pivot = "[0-9]_[A-Z]+[0-9]+",
                                      relative_to = getwd()) {
-  
+
   if (is.null(paths) || length(paths) == 0) {
-    
-    datad <- tibble::tibble(grp_0 = character(0), 
+
+    datad <- tibble::tibble(grp_0 = character(0),
                             pivot = character(0),
                             replicate = NA_integer_, n_replicates = NA_integer_,
-                            findex = NA_integer_, 
+                            findex = NA_integer_,
                             gindex = NA_integer_,
-                            path_to_files = character(0), 
-                            path_to_group = character(0), 
+                            path_to_files = character(0),
+                            path_to_group = character(0),
                             group = character(0),
                             file  = character(0))
-    
+
     return(datad)
-    
+
   }
 
   grp_prefix <- "grp_"
