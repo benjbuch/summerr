@@ -895,7 +895,7 @@ display_model <- function(df, ..., digits = 2) {
       ggplot2::aes(y = .data$.fitted + .data$.resid),
       stat = "summary", fun.data = ggplot2::mean_se, fatten = 1) +
     # fitted lines
-    ggplot2::geom_path(
+    ggplot2::geom_line(  ## geom_line connects in order on x axis
       data = . %>%
         dplyr::select(dplyr::group_vars(.), .data$augment_new) %>%
         tidyr::unnest(.data$augment_new),
