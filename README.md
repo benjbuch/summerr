@@ -82,7 +82,7 @@ fitted to each group of a grouped data frame and returning, fail-safe,
 these aspects:
 
 ``` r
-library(magrittr)
+library(magrittr)  # for the pipe operator
 
 iris %>% 
   dplyr::group_by(Species) %>% 
@@ -110,4 +110,4 @@ iris %>%
   model_display(color = Species)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-plotting-1.png" width="100%" />

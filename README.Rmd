@@ -80,7 +80,7 @@ Calling `broom::tidy`, `broom::glance` and `broom::augment` on model fitted to
 each group of a grouped data frame and returning, fail-safe, these aspects:
 
 ```{r fitting}
-library(magrittr)
+library(magrittr)  # for the pipe operator
 
 iris %>% 
   dplyr::group_by(Species) %>% 
@@ -89,7 +89,7 @@ iris %>%
 
 You can use `model_display` to visualize the fit.
 
-```{r message=FALSE, warning=FALSE}
+```{r plotting, message=FALSE, warning=FALSE}
 iris %>% 
   dplyr::group_by(Species) %>% 
   model_cleanly_groupwise(lm, formula = Sepal.Length ~ Sepal.Width) %>% 
