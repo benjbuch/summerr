@@ -24,17 +24,34 @@ utils::globalVariables(".")
 #'
 #' \subsection{Importing Experiment Layouts}{
 #'
-#' \link{import_layout_from_excel}
+#' \link{import_layout_from_excel} and \link{display_plate_layout}
 #'
 #' \link{import_layout_from_paths}
-#'
-#' \link{display_plate_layout}
 #'
 #' }
 #'
 #' \subsection{Formatting Helpers}{
 #'
 #' \link{as_well}
+#'
+#' \link{arrange_on_page} and \link{get_border_indices}
+#'
+#' }
+#'
+#' \subsection{Model Fitting Helpers}{
+#'
+#' \link{model_cleanly_groupwise} and \link{model_display}
+#'
+#' }
+#'
+#' \subsection{API for summerr Packages}{
+#'
+#' \link{get_template}
+#'
+#' \link{log_debugging}, \link{log_error}, \link{log_warn}, \link{log_message},
+#' and
+#' \link{log_line},
+#' \link{log_task}, \link{log_process}, \link{log_done}, \link{log_object}
 #'
 #' }
 #'

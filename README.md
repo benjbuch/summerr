@@ -10,7 +10,7 @@ The goal of `summerr` is to centralize the frequently used and some of
 the more exotic R functions and routines encountered during import,
 export, and processing of primary research data in the lab.
 
-Many of these functions are re-used (imported) by more dedicated
+Many of these functions are re-used (imported) by more specialized
 packages of the `summerr` family.
 
 ## Installation
@@ -86,17 +86,28 @@ library(magrittr)
 
 iris %>% 
   dplyr::group_by(Species) %>% 
-  model_cleanly_groupwise(lm, Sepal.Length ~ Sepal.Width)
+  model_cleanly_groupwise(lm, formula = Sepal.Length ~ Sepal.Width)
 #> # A tibble: 3 x 7
 #> # Groups:   Species [3]
 #>   Species    data              model  tidy             glance           
 #>   <fct>      <list>            <list> <list>           <list>           
-#> 1 setosa     <tibble [50 × 4]> <lm>   <tibble [4 × 5]> <tibble [1 × 12]>
-#> 2 versicolor <tibble [50 × 4]> <lm>   <tibble [4 × 5]> <tibble [1 × 12]>
-#> 3 virginica  <tibble [50 × 4]> <lm>   <tibble [4 × 5]> <tibble [1 × 12]>
-#>   augment_old        augment_new     
-#>   <list>             <list>          
-#> 1 <tibble [50 × 10]> <tibble [0 × 0]>
-#> 2 <tibble [50 × 10]> <tibble [0 × 0]>
-#> 3 <tibble [50 × 10]> <tibble [0 × 0]>
+#> 1 setosa     <tibble [50 × 4]> <lm>   <tibble [2 × 5]> <tibble [1 × 12]>
+#> 2 versicolor <tibble [50 × 4]> <lm>   <tibble [2 × 5]> <tibble [1 × 12]>
+#> 3 virginica  <tibble [50 × 4]> <lm>   <tibble [2 × 5]> <tibble [1 × 12]>
+#>   augment_old        augment_new       
+#>   <list>             <list>            
+#> 1 <tibble [50 × 10]> <tibble [50 × 10]>
+#> 2 <tibble [50 × 10]> <tibble [50 × 10]>
+#> 3 <tibble [50 × 10]> <tibble [50 × 10]>
 ```
+
+You can use `model_display` to visualize the fit.
+
+``` r
+iris %>% 
+  dplyr::group_by(Species) %>% 
+  model_cleanly_groupwise(lm, formula = Sepal.Length ~ Sepal.Width) %>% 
+  model_display(color = Species)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />

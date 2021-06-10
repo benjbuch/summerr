@@ -810,14 +810,14 @@ display_plate_layout <- function(layout, ...) {
 #'
 #' my_data %>%
 #'   model_cleanly_groupwise(lm, formula = y ~ x) %>%
-#'   display_model(color = dataset)
+#'   model_display(color = dataset)
 #'
 #' ## positioning of per-facet text labels in ggplot is inherently
 #' ## difficult; the visual of the example could be improved
 #'
 #' my_data %>%
 #'   model_cleanly_groupwise(lm, formula = y ~ x) %>%
-#'   display_model() +
+#'   model_display() +
 #'   # add substituted formula
 #'   geom_text(aes(x = -Inf, y = Inf, label = sub.formula),
 #'     hjust = 0, vjust = 1) +
@@ -832,7 +832,7 @@ display_plate_layout <- function(layout, ...) {
 #' @importFrom  rlang .data
 #'
 #' @export
-display_model <- function(df, ..., digits = 2) {
+model_display <- function(df, ..., digits = 2) {
 
   # substitute the fitted values
 
@@ -847,10 +847,11 @@ display_model <- function(df, ..., digits = 2) {
 
       # only "unnamed" coefficients given
 
-      SFL <- stats::as.formula(paste0(formula.tools::lhs(FML), "~",
-                                      paste0(sprintf("%f*%s", signif(COF[-1], digits = digits),
+      SFL <- stats::as.formula(paste0(
+        formula.tools::lhs(FML), "~", paste0(sprintf("%f*%s", signif(COF[-1],
+                                                                     digits = digits),
                                                      names(COF[-1])), collapse = "+"),
-                                      "+", signif(COF[1], digits = digits)))
+        "+", signif(COF[1], digits = digits)))
 
     } else {
 
@@ -877,7 +878,7 @@ display_model <- function(df, ..., digits = 2) {
   df <- dplyr::mutate(tidyr::unnest(df, ".tmp"), sub.formula = as.character(
     .data$sub.formula))
 
-  if (getOption("summerr.log", default = FALSE) == TRUE) print(df)
+  # log_object(df)
 
   # make sure to get a 2D plot
 
@@ -1058,6 +1059,8 @@ get_border_indices <- function(items = NULL, border = "b", byrow = TRUE, include
 #' A \link[dplyr:grouped_df]{grouped data frame} with additional columns, \code{data},
 #' \code{model}, \code{tidy}, \code{augment_old}, and \code{augment_new}.
 #'
+#' @seealso model_display
+#'
 #' @importFrom rlang .data
 #'
 #' @export
@@ -1067,8 +1070,11 @@ model_cleanly_groupwise <- function(x, FUN, newdata = NULL, ...) {
 
   .call <- match.call(expand.dots = FALSE)
 
-  if(any(nchar(names(.call$...)) == 0)) log_warn("not all arguments passed to",
-                                                 sQuote(.call$FUN), "are named")
+  if(any(nchar(names(.call$...)) == 0)) {
+
+    log_warn("not all arguments passed to", sQuote(.call$FUN), "are named")
+
+  }
 
   # suppress error and warning messages from now on
 

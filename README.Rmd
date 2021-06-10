@@ -22,7 +22,7 @@ The goal of `summerr` is to centralize the frequently used and some of the more
 exotic R functions and routines encountered during import, export, and processing 
 of primary research data in the lab.
 
-Many of these functions are re-used (imported) by more dedicated packages of the 
+Many of these functions are re-used (imported) by more specialized packages of the 
 `summerr` family.
 
 ## Installation
@@ -84,8 +84,16 @@ library(magrittr)
 
 iris %>% 
   dplyr::group_by(Species) %>% 
-  model_cleanly_groupwise(lm, Sepal.Length ~ Sepal.Width)
+  model_cleanly_groupwise(lm, formula = Sepal.Length ~ Sepal.Width)
 ```
 
+You can use `model_display` to visualize the fit.
+
+```{r message=FALSE, warning=FALSE}
+iris %>% 
+  dplyr::group_by(Species) %>% 
+  model_cleanly_groupwise(lm, formula = Sepal.Length ~ Sepal.Width) %>% 
+  model_display(color = Species)
+```
 
 

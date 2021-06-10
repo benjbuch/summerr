@@ -31,3 +31,6 @@ or the \code{newdata}.
 The fitting is wrapped with \code{\link[purrr:possibly]{purrr::possibly}} and
 will return empty objects instead of errors.
 }
+\seealso{
+model_display
+}
