@@ -185,6 +185,8 @@ select_directory <- function(path = getwd(), caption = "Select a directory",
 
     if (rstudioapi::isAvailable()) {
 
+      Sys.sleep(0.9) # allow some time for flushing previous outputs
+
       path <- rstudioapi::selectDirectory(caption = caption, label = label, path = path)
 
     } else {
@@ -263,6 +265,8 @@ select_single_file <- function(path = getwd(), prefix = ".+", suffix = "*",
     if (interactive()) {
 
       if (rstudioapi::isAvailable(version_needed = "1.1.287")) {
+
+        Sys.sleep(0.9) # allow some time for flushing previous outputs
 
         dir_files <- rstudioapi::selectFile(
           caption = paste(caption, filetype), label = label,
