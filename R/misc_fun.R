@@ -278,9 +278,12 @@ select_single_file <- function(path = getwd(), prefix = ".+", suffix = "*",
 
     } else {
 
-      message("Warning: '", pattern, "' matched multiple files in '", path, "'. Skipping.")
+      # message("Warning: '", pattern, "' matched multiple files in '", path, "'. Skipping.")
+      #
+      # dir_files <- character()
 
-      dir_files <- character()
+      path <- file.path(path, select_from_list(
+        caption = caption, items = dir_files))
 
     }
 
