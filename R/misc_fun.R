@@ -33,6 +33,8 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
   well_let <- stringr::str_extract(well_raw, stringr::regex("[A-Z]+", ignore_case = TRUE))
 
   defects <- mapply(function(x, y) any(is.na(x), is.na(y)), well_let, well_num)
+  
+  defects <- as.integer(defects)
 
   if (to.upper == TRUE) well_let <- toupper(well_let)
 
