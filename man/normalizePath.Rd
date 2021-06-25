@@ -4,10 +4,16 @@
 \alias{normalizePath}
 \title{Express file paths in their canonical form -- Truly}
 \usage{
-normalizePath(path)
+normalizePath(path, winslash = .Platform$file.sep, mustWork = FALSE)
 }
 \arguments{
 \item{path}{A character vector of file paths.}
+
+\item{winslash}{the separator to be used on Windows -- ignored
+    elsewhere.  Must be one of \code{c("/", "\\\\")}.}
+
+\item{mustWork}{logical: if \code{TRUE} then an error is given if the result
+    cannot be determined; if \code{NA} then a warning.}
 }
 \value{
 A character vector.

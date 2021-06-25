@@ -64,6 +64,7 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
 #' "\code{\\}" to separate folders and files.
 #'
 #' @param path A character vector of file paths.
+#' @inheritParams base::normalizePath
 #'
 #' @details
 #' Calls \code{\link[base:normalizePath]{normalizePath}} with \code{.Platform$file.sep}.
@@ -73,12 +74,12 @@ as_well <- function(well, as.tibble = FALSE, to.upper = TRUE, zero.padding = 2) 
 #' A character vector.
 #'
 #' @export
-normalizePath <- function(path) {
+normalizePath <- function(path, winslash = .Platform$file.sep, mustWork = FALSE) {
 
   log_debugging("received", sQuote(path))
 
   norm_path <- stringr::str_replace(
-    base::normalizePath(path, winslash = .Platform$file.sep, mustWork = FALSE),
+    base::normalizePath(path, winslash = winslash, mustWork = mustWork),
     # remove trailing path separator which is not accepted on Windows
     pattern = paste0(.Platform$file.sep, "$"), replacement = ""
   )
