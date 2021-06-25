@@ -118,7 +118,7 @@ get_template <- function(package = NULL, filename = "template", version = "") {
 
   tmp.cont <- c(
     # add update reminder
-    paste0("# devtools::install_github(benjbuch/", package, ")  ## Did you check for updates?"),
+    paste0("# devtools::install_github('benjbuch/", package, "')  ## Did you check for updates?"),
     tmp.spcr,
     #
     tmp.cont,
