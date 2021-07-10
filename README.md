@@ -24,6 +24,12 @@ you must install and update the development version from
 devtools::install_github("benjbuch/summerr")
 ```
 
+Once installed, the suite can be updated using:
+
+``` r
+summerr::update_summerr()  # expands to other packages if loaded
+```
+
 ## Showcases
 
 Some examples of general utility.

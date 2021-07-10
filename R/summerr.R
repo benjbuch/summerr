@@ -93,6 +93,56 @@ NULL
 
 # GENERAL USER INTERFACE -------------------------------------------------------
 
+#' Update the summerr suite
+#'
+#' @param pkgs The package to update. If \code{NULL}, all currently loaded \code{summerr}
+#' packages will be updated.
+#' @param git_repo A GitHub repository to fetch the latest versions from. If \code{NULL},
+#' CRAN is tried.
+#'
+#' @export
+update_summerr <- function(pkgs = NULL, git_repo = "benjbuch") {
+
+  if (is.null(pkgs)) {
+
+    pkgs <- loadedNamespaces()[which(startsWith(loadedNamespaces(), "summerr"))]
+
+  }
+
+  if (is.null(pkgs)) {
+
+    pkgs <- c("summerr")
+
+  }
+
+  log_task("I am going to update", paste0("'", paste(pkgs, collapse = "', '"), "'"))
+
+  lapply(pkgs, pkgload::unload)  # force unload even if dependencies
+
+  # print(loadedNamespaces())
+
+  if (is.null(git_repo)) {
+
+    log_process("checking CRAN")
+    devtools::install_cran(pkgs)
+
+  } else {
+
+    log_process("checking GitHub")
+    devtools::install_github(paste0(git_repo, "/", pkgs))
+
+  }
+
+  rstudioapi::restartSession()
+
+  log_line()
+
+  lapply(pkgs, function(p) require(p, quietly = TRUE, character.only = TRUE))
+
+  invisible()
+
+}
+
 #' Script from template
 #'
 #' Opens a new file with a template.
@@ -118,7 +168,8 @@ get_template <- function(package = NULL, filename = "template", version = "") {
 
   tmp.cont <- c(
     # add update reminder
-    paste0("# devtools::install_github('benjbuch/", package, "')  ## Did you check for updates?"),
+    # paste0("# devtools::install_github('benjbuch/", package, "')  ## Did you check for updates?"),
+    paste0("update_summerr('", package, "')  ## Did you check for updates?"),
     tmp.spcr,
     #
     tmp.cont,

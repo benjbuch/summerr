@@ -31,10 +31,17 @@ Since this package is not part of [CRAN](https://CRAN.R-project.org), you must
 install and update the development version from [GitHub](https://github.com/) 
 with:
 
-``` r
+```{r eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("benjbuch/summerr")
 ```
+
+Once installed, the suite can be updated using:
+
+```{r eval=FALSE}
+summerr::update_summerr()  # expands to other packages if loaded
+```
+
 ## Showcases
 
 Some examples of general utility.
